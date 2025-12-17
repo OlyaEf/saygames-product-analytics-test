@@ -35,7 +35,7 @@ FROM
             PARTITION BY s.device_id
             ORDER BY s.session_start
         ) AS session_number,
-        d.country
+        coalesce(nullIf(d.country, ''), 'Unknown') AS country
     FROM sessions AS s
     LEFT JOIN test.devices AS d
         ON s.device_id = d.device_id

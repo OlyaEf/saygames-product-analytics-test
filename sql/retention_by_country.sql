@@ -17,7 +17,7 @@ FROM
 (
     SELECT
         first_date,
-        country,
+        coalesce(nullIf(country, ''), 'Unknown') AS country,
         count() AS installs,
         -- игрок считается вернувшимся на D1,
         -- если в массиве dates есть дата first_date + 1 день

@@ -14,12 +14,12 @@ SELECT
 FROM
 (
     SELECT
-        e.level                               AS level,
-        d.country                             AS country,
+        e.level AS level,
+        coalesce(nullIf(d.country, ''), 'Unknown') AS country,
         -- сколько раз уровень запускали
-        countIf(e.event = 'level_started')    AS level_starts,
+        countIf(e.event = 'level_started') AS level_starts,
         -- сколько раз уровень зафейлили
-        countIf(e.event = 'level_failed')     AS level_fails
+        countIf(e.event = 'level_failed') AS level_fails
     FROM test.events AS e
     LEFT JOIN test.devices AS d
         ON e.device_id = d.device_id
@@ -27,7 +27,7 @@ FROM
     -- WHERE e.level > 0
     GROUP BY
         e.level,
-        d.country
+        country
 ) AS t
 -- отбрасываем уровни/страны, где не было ни одного старта
 WHERE level_starts > 0
