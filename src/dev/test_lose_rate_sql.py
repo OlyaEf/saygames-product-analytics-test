@@ -7,13 +7,14 @@
 3. Печатает количество строк и первые 10 строк результата.
 4. Проверяет, что пустых стран (''/NULL) больше нет, а вместо них используется 'Unknown'.
 5. Печатает статистику по 'Unknown'.
+6. Проверяет по сырым данным (test.events) количество уникальных значений level.
 
 Запуск из корня проекта:
     poetry run python src/dev/test_lose_rate_sql.py
 """
 
 from pathlib import Path
-from typing import List, Any, Tuple
+from typing import List
 
 from core.db import get_client
 
@@ -35,6 +36,7 @@ def main() -> None:
     """
     Выполняет запрос лузрейта и выводит несколько строк результата,
     а также проверяет нормализацию поля country.
+    Дополнительно выводит количество уникальных level в сырых данных test.events.
     """
     sql = load_sql("lose_rate_by_level.sql")
     client = get_client()
@@ -46,6 +48,16 @@ def main() -> None:
     print("Первые 10 строк:\n")
     for row in rows[:10]:
         print(dict(zip(columns, row)))
+
+    # --- ДОБАВЛЕНО: проверка уникальных level в сырых данных ---
+    raw_levels_sql = """
+    SELECT uniqExact(level) AS uniq_levels
+    FROM test.events
+    """
+    uniq_levels = client.execute(raw_levels_sql)[0][0]
+    print("\n=== Проверка сырых данных test.events ===")
+    print(f"Уникальных значений level в test.events: {uniq_levels}")
+    # ----------------------------------------------------------
 
     # Проверяем наличие поля country
     try:

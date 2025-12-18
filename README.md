@@ -55,6 +55,13 @@
 - `retained_d1 = sum(has(dates, first_date + 1))`
 - `retained_d7 = sum(has(dates, first_date + 7))`
 
+### Визуализация в Tableau (Retention)
+- Ось X: `WEEK(first_date)` — когорты агрегируются по неделям (чтобы график был стабильнее и читабельнее).
+- Значение на графике: `AVG(retention_d1_percent)` и `AVG(retention_d7_percent)` по когортам недели.
+  > Почему AVG: каждая точка = среднее по когортам, попавшим в неделю.
+  > Если нужен “общий” ретеншен недели, корректнее считать взвешенно: SUM(retained) / SUM(installs).
+- Фильтр качества когорты: `Min installs (cohort)` — исключаем маленькие когорты, чтобы убрать шум.
+
 ---
 
 ## Метрика 2. Lose Rate по уровням
@@ -79,6 +86,20 @@
 - Группируем по `(level, country)`
 - Исключаем строки, где `level_starts = 0`, чтобы не было деления на ноль:
   - `WHERE level_starts > 0`
+
+### Tableau: Top N уровней для Lose Rate
+Чтобы график lose rate был читаемым при большом числе уровней, добавлены параметр и calculated fields:
+
+- **Параметр:** `Top N levels` (Integer; например 10/20/30/50) — сколько уровней показывать.
+- **Ранг уровня по lose rate:**
+```tableau
+RANK_DENSE(AVG([lose_rate_percent]), 'desc')
+```
+
+## Фильтр Top N: 
+```tableau 
+[Level rank by lose rate] <= [Top N levels]
+```
 
 ---
 
@@ -123,6 +144,15 @@
 - `sessions_count = count()` — сколько сессий попало в расчёт
 - `avg_session_duration_sec = avg(session_duration_sec)` — средняя длительность
 
+### Визуализация в Tableau (Session Duration)
+- Лист: `Session Duration by Session Number`, тип — Line.
+- X: `session_number`
+- Y: `AVG(avg_session_duration_min)` (средняя длительность сессии в минутах)
+- Цвет: `country` (линии по странам)
+- Фильтр: `country` (выбор стран)
+- Фильтр качества: `sessions_count >= 50` (по умолчанию)
+- Фильтр диапазона: `session_number 1–50` (по умолчанию, можно расширять)
+
 ---
 
 ## Что используется в визуализации (Tableau)
@@ -132,3 +162,12 @@
 Для удобного анализа предусмотрен разрез по странам:
 - фильтр `country` применяется ко всем трём графикам
 - отсутствующие страны представлены как `'Unknown'`
+
+## Дашборд (Tableau)
+
+- Tableau Public (онлайн): 
+<https://public.tableau.com/views/SayGamesHelicopterEscape-draftv1/HelicopterEscape3DRetentionGameplayFunnel?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link>
+- Файл воркбука в репозитории: `dashboards/SayGames Helicopter Escape - draft v1.twbx`
+
+> Если онлайн-ссылка недоступна, дашборд можно открыть локально из `.twbx`
+> (внутри уже упакованы данные/источники).
