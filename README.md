@@ -1,3 +1,19 @@
+## Запуск проекта локально
+
+Требования: Python 3.11+, Poetry.
+
+```bash
+# 1) Установить зависимости
+poetry install
+
+# 2) Создать переменные окружения (пример)
+cp .env.example .env
+
+# 3) Запустить dev-скрипты проверки SQL (пример)
+poetry run python src/scripts/export_lose_rate_to_csv.py
+poetry run python src/scripts/export_retention_to_csv.py
+poetry run python src/scripts/export_session_duration_to_csv.py
+```
 # Описание расчёта метрик
 
 Ниже описано, как были посчитаны метрики для дашборда по проекту **Helicopter Escape 3D** на данных ClickHouse.

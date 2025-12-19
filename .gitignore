@@ -1,0 +1,83 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# --- Poetry ---
+poetry.lock
+.cache/pypoetry/
+
+# --- PyCharm / VSCode ---
+.idea/
+.vscode/
+*.iml
+
+# --- Byte-compiled / temporary files ---
+*.log
+*.tmp
+*.swp
+*.swo
+
+# --- Django / Flask / FastAPI ---
+*.db
+*.sqlite3
+*.sqlite
+media/
+staticfiles/
+static/
+local_settings.py
+
+# --- Celery / Redis / RabbitMQ ---
+celerybeat-schedule
+celerybeat.pid
+
+# --- Docker ---
+*.pid
+*.seed
+*.tar
+*.bak
+docker-compose.override.yml
+
+# --- Unit test / coverage ---
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+test-results/
+.cache/
+nosetests.xml
+coverage.xml
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*.ipynb_meta.json
+
+# --- System ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Other ---
+.mypy_cache/
+.pyre/
+.pytype/
+Pipfile.lock
+
+# Локальный конфиг с реальными доступами
+src/core/config.py
